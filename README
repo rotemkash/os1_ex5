@@ -1,0 +1,95 @@
+File: ex5a.c
+ ========================================
+
+File: ex5a1.c
+ ========================================
+ Writen by: Rotem Kashani , id = 209073352 , login = rotemkash 
+	    Mahmood Jazmawy , id= 211345277, login=Mahmoodja
+
+This is the Array Owner Process. initializes an array with 105 cells.
+cell #0: has thes owner's pid, cell #1,2,3: is a cell for each process, 
+we use it at first to indicate the process are running then we use it as a 
+counter for how many values this process has inserted in the array.
+cell #4: this cell is used a sa lock to give each process it's turn to insert values
+The rest of the cells are used as normal cells to get values.
+after initializing the array this process goes to sleep and waits for a signal
+to wake up and print the required info about the array we have now.
+--> size, min value, max value
+
+Compile: gcc ex5a1.c -Wall -o ex5a1
+
+Run: ex5a1
+
+File: ex5a2.c 
+ ========================================
+ Writen by: Rotem Kashani , id = 209073352 , login = rotemkash 
+	    Mahmood Jazmawy , id= 211345277, login=Mahmoodja
+
+This is the "prime number creators" program. it joins the shared memory creates 
+by the array owner. it tries to insert a random prime number in the array for
+100 times. there's three creators running at te same time each one has it's 
+turn to try and insert. they use the fifth cell as a locking mechanism to 
+indicate that some process it trying to insert at the moment wait for your turn.
+when they finish they print how much numbers they managed to insert
+
+Compile: gcc ex5a2.c -Wall -o ex5a2
+
+Run: ex5a2 1
+(and respectively 2 for the second copy and 3 for the third copy)
+
+race modes:
+one possible situation that the "lock" cell is 0 and 2 processes read it and break the loop.
+then both of them get to write on the array at the same time and might overwrite each other.
+
+File: ex5b.c
+ ========================================
+
+File: ex5b1.c
+ ========================================
+ Writen by: Rotem Kashani , id = 209073352 , login = rotemkash 
+	    Mahmood Jazmawy , id= 211345277, login=Mahmoodja
+
+This program is our server that checks for prime numbers. it creates a shared
+memory of an array of 102 cells. it "goes to sleep" until it receives a signal
+to wake up. when it does wake up it goes to our shared memory array and  goes over 
+the numbers in it. if the number is not a prime it replaces it with -1. after it finishes 
+it "goes to sleep" and send a signal to the front end to wake up.
+
+Compile: gcc ex5b1.c -Wall -o ex5b1
+
+Run: ex5b1 
+
+File: ex5b2.c 
+ ========================================
+ Writen by: Rotem Kashani , id = 209073352 , login = rotemkash 
+	    Mahmood Jazmawy , id= 211345277, login=Mahmoodja
+
+This program is our server that checks for palindrome series.it creates a shared
+memory of an array of 22 cells. it "goes to sleep" until it receives a signal to
+wake up. when it does wake up it goes to our shared memory array and goes over the numbers 
+in it. if the series of number is a palindrome is puts 1 in the 21th cell otherwise it puts
+0. after it finishes it "goes to sleep" and send a signal to the front end to wake up.
+ 
+Compile: gcc ex5b2.c -Wall -o ex5b2
+
+Run: ex5b2
+
+File: ex5b3.c 
+ ========================================
+ Writen by: Rotem Kashani , id = 209073352 , login = rotemkash 
+	    Mahmood Jazmawy , id= 211345277, login=Mahmoodja
+
+ this is the front end side of our program. it prompts the user to enter a command 
+'q' or 'p'.
+'p': it waits for the user to enter a series of numbers that end with a 0. it puts the numbers
+in the shared memory array sends a signal to SIGUSR1 and goes to sleep after the server finishes
+checking the array and sends a signal back the front end wakes up and prints the prime numbers in 
+the array.
+'q': it waits for the user to enter a series of number and a 0 at the end of it. it puts the numbers
+in the shared array and sends a signal to SIGUSR2 and goes to sleep. after the server finishes and send 
+a signal back the front end wakes up and prints whether the series is a palindrome or not.
+
+Compile: gcc ex5b3.c -Wall -o ex5b3
+
+Run: ex5b3
+
